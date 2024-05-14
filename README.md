@@ -189,7 +189,9 @@ v1.1更新的内容还没有在此文档中更新，等到v1.2发布后我统一
 
 打开命令行输入【pip show you-get】，找到【Location】这一栏，用文件资源管理器打开后的文件路径，接着找到【you-get】目录打开，再找到【extractors】目录打开，找到【bilibili.py】文件，用IDLE编辑器打开
 
-在大概<kbd>第103行</kbd>的位置找到
+#### 更改1
+
+在大概<kbd>第101行</kbd>的位置找到
 
 ```Python
 return 'https://interface.bilibili.com/v2/playurl?%s&sign=%s' % (params, chksum)
@@ -199,6 +201,20 @@ return 'https://interface.bilibili.com/v2/playurl?%s&sign=%s' % (params, chksum)
 
 ```Python
 return "https://api.bilibili.com/x/player/wbi/v2?%s&sign=%s" % (params, chksum)
+```
+
+#### 更改2
+
+在大概<kbd>第332行</kbd>的位置找到
+
+```Python
+self.danmaku = get_content('http://comment.bilibili.com/%s.xml' % cid)
+```
+
+将其替换成
+
+```Python
+self.danmaku = get_content('http://comment.bilibili.com/%s.xml' % cid, headers=self.bilibili_headers(referer=self.url))
 ```
 
 然后保存即可
