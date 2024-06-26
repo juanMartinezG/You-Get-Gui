@@ -3344,7 +3344,12 @@ class YouGetGui:
             program_language = user_settings["default_setting"]["language"]
 
             # 获取默认语言设置和用户语言设置
-            default_language_settings = default_settings["languages"][program_language]
+            default_language_settings = {}
+            try:
+                default_language_settings = default_settings["languages"][program_language]
+            except:
+                for key, value in default_settings["languages"]["en"].items():
+                    default_language_settings[key] = key
             user_language_settings = user_settings["languages"].get(program_language, {})
 
             # 创建一个新的字典来存储合并后的语言设置
