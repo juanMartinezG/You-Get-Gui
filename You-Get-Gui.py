@@ -65,7 +65,7 @@ class YouGetGui:
                     "player_power": False,
                     "player_path": False,
                     "player_argument": False,
-                    "run_in_new_window": True,
+                    "run_in_new_window": False,
                     "proxy_power": False,
                     "proxy_no_proxy": False,
                     "proxy_extracting_only": False,
