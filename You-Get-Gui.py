@@ -152,7 +152,7 @@ class YouGetGui:
             },
             "languages": {
                 "zh-cn": {
-                    "show_name": "简体中文",
+                    "_show_name": "简体中文",
                     "clear": "清空",
                     "url": "下载地址",
                     "file_path": "文件地址",
@@ -361,7 +361,7 @@ class YouGetGui:
                     "tip_need_restart": "若是更改则需要重启应用程序",
                 },
                 "en": {
-                    "show_name": "English",
+                    "_show_name": "English",
                     "clear": "Clear",
                     "url": "Url",
                     "file_path": "File path",
@@ -2263,7 +2263,7 @@ class YouGetGui:
                 check_hint.config(
                     text=f'{self.final_settings["language"]["fail_to_check_upgrade"]}\n{self.final_settings["language"]["reason"]}{error_type}',
                     foreground='orange')
-                cloud_version.config(text='云端版本：获取失败！')
+                cloud_version.config(text=f'{self.final_settings["language"]["cloud_version"]}: {self.final_settings["language"]["fail_to_get_upgrade"]}')
                 upgrade_log_text.config(state='normal')
                 upgrade_log_text.delete('1.0', tk.END)
                 upgrade_log_text.insert(tk.END, self.final_settings["language"]["fail_to_get_upgrade"])
@@ -2272,7 +2272,7 @@ class YouGetGui:
                 return
 
             show = content.split("\n")
-            if float(self.__version__) >= float(re.search(r'v(\d+\.\d+)', show[0]).group(1)):
+            if float(self.__version__) >= float(re.search(r'(?:v)?\s*(\d+(?:\.\d+)*)\s*(?:-\w+)?', show[0]).group(1)):
                 check_hint.config(text=self.final_settings["language"]["already_new_version"], foreground='green')
                 cloud_version.config(text=f'{self.final_settings["language"]["cloud_version"]}: {show[0]}')
                 upgrade_log_text.config(state='normal')
@@ -2280,9 +2280,9 @@ class YouGetGui:
                 upgrade_log_text.insert(tk.END, '\n'.join(show[0:]))
                 upgrade_log_text.config(state='disabled')
                 upgrade_button.config(state='normal', command=lambda: open_upgrade_page(
-                    float(re.search(r'v(\d+\.\d+)', show[0]).group(1))))
+                    float(re.search(r'\s*v(\d+(?:\.\d+)*(?:-\w+)?)\s*', show[0]).group(1))))
             else:
-                if float(re.search(r'v(\d+\.\d+)', show[0]).group(1)) - float(self.__version__) >= 1:
+                if float(re.search(r'(?:v)?\s*(\d+(?:\.\d+)*)\s*(?:-\w+)?', show[0]).group(1)) - float(self.__version__) >= 1:
                     check_hint.config(text=self.final_settings["language"]["old_version"], foreground='red')
                 else:
                     check_hint.config(text=self.final_settings["language"]["find_new_version"], foreground='orange')
@@ -2292,7 +2292,7 @@ class YouGetGui:
                 upgrade_log_text.insert(tk.END, '\n'.join(show[0:]))
                 upgrade_log_text.config(state='disabled')
                 upgrade_button.config(state='normal', command=lambda: open_upgrade_page(
-                    float(re.search(r'v(\d+\.\d+)', show[0]).group(1))))
+                    float(re.search(r'\s*v(\d+(?:\.\d+)*(?:-\w+)?)\s*', show[0]).group(1))))
 
         def open_upgrade_page(ver):
             webbrowser.open(f'https://github.com/hunyanjie/You-Get-Gui/releases/tag/v{ver}')
@@ -2350,7 +2350,7 @@ class YouGetGui:
 
         def settings_set(input_settings):
             self.program_language_combobox.current(next((index for index, lang in enumerate(
-                [f"{k} / {v['show_name']}" for k, v in self.final_settings['languages'].items()]) if lang.startswith(
+                [f"{k} / {v['_show_name']}" for k, v in self.final_settings['languages'].items()]) if lang.startswith(
                 self.final_settings['default_setting']['language'] + ' / ')), None))
             self.program_style_combobox.current(int(input_settings["default_setting"]["window_type"]))
             self.show_change_name_format_var.set(input_settings["default_setting"]["show_change_name_format"])
@@ -2451,7 +2451,7 @@ class YouGetGui:
         def check_settings_change(event=None):
             self.new_settings = {"auto_save_download_setting": {}}
             self.new_settings["language"] = [k for k, v in self.final_settings['languages'].items()][
-                [f"{k} / {v['show_name']}" for k, v in self.final_settings['languages'].items()].index(
+                [f"{k} / {v['_show_name']}" for k, v in self.final_settings['languages'].items()].index(
                     self.program_language_combobox.get())]
             self.new_settings["window_type"] = self.program_style_combobox.get()
             self.new_settings["exit_with_hint"] = self.exit_with_hint_var.get()
@@ -2612,12 +2612,12 @@ class YouGetGui:
             self.program_language_label = ttk.Label(self.program_language_frame, text="语言 / Language:")
             self.program_language_label.grid(row=0, column=0, sticky=tk.W)
             self.program_language_combobox = ttk.Combobox(self.program_language_frame,
-                                                          values=[f"{k} / {v['show_name']}" for k, v in
+                                                          values=[f"{k} / {v['_show_name']}" for k, v in
                                                                   self.final_settings['languages'].items()])
             self.EnhancedTooltip(self, self.program_language_combobox, self.final_settings["language"]["tip_need_restart"])
             self.program_language_combobox.grid(row=0, column=1, sticky=tk.W)
             self.program_language_combobox.current(next((index for index, lang in enumerate(
-                [f"{k} / {v['show_name']}" for k, v in self.final_settings['languages'].items()]) if lang.startswith(
+                [f"{k} / {v['_show_name']}" for k, v in self.final_settings['languages'].items()]) if lang.startswith(
                 self.final_settings['default_setting']['language'] + ' / ')), None))
             self.program_language_combobox.bind("<<ComboboxSelected>>", check_settings_change)
             self.program_language_frame.grid(row=1, column=0, columnspan=3, sticky=tk.W)
@@ -3625,6 +3625,7 @@ try:
     YouGet.mainloop()
 except Exception as e:
     # 将错误信息保存至文件
-    if sys.argv[1] == "debug":
-        with open("error.log", "a+") as f:
-            f.write('-------------------------------------------------------------------\n' + str(e) + '\n')
+    if len(sys.argv) > 0:
+        if sys.argv[1] == "debug":
+            with open("error.log", "a+") as f:
+                f.write('-------------------------------------------------------------------\n' + str(e) + '\n')
