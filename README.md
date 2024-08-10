@@ -2,7 +2,9 @@
 
 给You-Get套上GUI以便于使用。
 
-You-Get hooked up to a GUI for easy use.
+Give You-Get a GUI for easy use.
+
+![](./file/readme/9.png)
 
 # 免责声明（Disclaimer）
 
